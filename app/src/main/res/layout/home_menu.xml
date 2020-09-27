@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/upeu"
-    tools:context=".HomeMenu" >
+    android:background="@drawable/back_menu"
+    tools:context=".HomeMenu">
 
     <ImageView
         android:id="@+id/imageView3"
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Modo de Juego"
-        android:textColor="#171414"
+        android:textColor="#FFF8F8"
         android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nro. Jugadores"
-        android:textColor="#171414"
+        android:textColor="#FFF8F8"
         android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Categoria"
-        android:textColor="#171414"
+        android:textColor="#FFF8F8"
         android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -98,7 +98,7 @@
         app:layout_constraintVertical_bias="0.676" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/settingButton"
         android:layout_width="259dp"
         android:layout_height="53dp"
         android:text="@string/settings"
@@ -110,14 +110,15 @@
         app:layout_constraintVertical_bias="0.799" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/playButton"
         android:layout_width="259dp"
         android:layout_height="53dp"
+        android:onClick="changeView"
         android:text="@string/play"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.467"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.91" />
+        app:layout_constraintVertical_bias="0.911" />
 </androidx.constraintlayout.widget.ConstraintLayout>
