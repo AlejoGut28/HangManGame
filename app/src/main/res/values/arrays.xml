@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="comidas_facil">
+        <item>ceviche</item>
+        <item>lomito</item>
+        <item>chaufa</item>
+    </string-array>
+
+    <string-array name="comidas_intermedio">
+        <item>cabrito</item>
+        <item>arroz con pollo</item>
+        <item>pollo a la holla</item>
+    </string-array>
+
+    <string-array name="comidas_dificil">
+        <item>papa rellena</item>
+        <item>rocoto relleno</item>
+        <item>salpicon de pollo</item>
+    </string-array>
+</resources>

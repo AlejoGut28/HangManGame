@@ -16,6 +16,12 @@ public class HomeMenu extends AppCompatActivity {
         setContentView(R.layout.home_menu);
 
         playButton = (Button) findViewById(R.id.playButton);
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeView(v);
+            }
+        });
     }
 
     public void changeView(View view) {
