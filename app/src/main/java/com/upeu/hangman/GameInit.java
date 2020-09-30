@@ -1,43 +1,57 @@
 package com.upeu.hangman;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Random;
 
+
 public class GameInit extends AppCompatActivity {
-    public ImageButton back_button;
-    private String[] eatItem;
+    private String[] words;
     private Random random;
-    private String unrepeatWord;
-    private TextView[] downLine;
-    private LinearLayout wordC;
+    private String currWord;
+    private TextView[] charView;
+    private LinearLayout wordLayout;
+    private LetterAdapter letterAdapter;
+    private GridView gridView;
+    private int numCorr;
+    private String scored;
+    private int numChar;
+    private int sizePart = 6;
+    private ImageView[] part;
+    private int currPart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_init);
-
-        eatItem = getResources().getStringArray(R.array.comidas_facil);
-        wordC = findViewById(R.id.wordCenter);
-
-        back_button = findViewById(R.id.homeButton);
-        back_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeView(v);
-            }
-        });
+        words = getResources().getStringArray(R.array.comidas_facil);
+        random = new Random();
+        wordLayout = findViewById(R.id.words);
+        gridView = findViewById(R.id.letters);
+        part = new ImageView[sizePart];
+        part[0] = findViewById(R.id.head);
+        part[1] = findViewById(R.id.twist);
+        part[2] = findViewById(R.id.armRight);
+        part[3] = findViewById(R.id.armLeft);
+        part[4] = findViewById(R.id.legRight);
+        part[5] = findViewById(R.id.legLeft);
+        playGame();
     }
 
     public void changeView(View view) {
@@ -45,24 +59,90 @@ public class GameInit extends AppCompatActivity {
         startActivity(i);
     }
 
-    private void lineDynamic() {
-        String word;
-        word = eatItem[random.nextInt(eatItem.length)];
+    public void playGame() {
+        String newWords = words[random.nextInt(words.length)];
 
-        while (word.equals(unrepeatWord)) {
-            word = eatItem[random.nextInt(eatItem.length)];
+        while (newWords.equals(currWord)) newWords = words[random.nextInt(words.length)];
+
+        currWord = newWords;
+        charView = new TextView[currWord.length()];
+        for (int i = 0; i < currWord.length(); i++) {
+            charView[i] = new TextView(this);
+            charView[i].setText("" + currWord.charAt(i));
+            charView[i].setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            charView[i].setGravity(Gravity.CENTER);
+            charView[i].setTextColor(Color.WHITE);
+            charView[i].setBackgroundResource(R.drawable.letter_bg);
+            wordLayout.addView(charView[i]);
         }
+        letterAdapter = new LetterAdapter(this);
+        gridView.setAdapter(letterAdapter);
+        numCorr = 0;
+        scored = "" + 0;
+        numChar = 0;
+        currPart = 0;
+    }
 
-        downLine = new TextView[unrepeatWord.length()];
+    public void letterPressed(View view) {
+        String letter = ((TextView)view).getText().toString();
+        char letterChar = letter.charAt(0);
+        view.setEnabled(false);
+        boolean booleanCorrect = false;
+        for (int i = 0; i < currWord.length(); i++) {
+            if (currWord.charAt(i) == letterChar) {
+                booleanCorrect = true;
+                numCorr++;
+                scored = "" + 100;
+                charView[i].setTextColor(Color.BLACK);
+            }
+        }
+        if (booleanCorrect) {
+            if (numCorr == numChar){
+                disabledButton();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("You win !!");
+                builder.setMessage("Congratulation!! \n\n the answer was \n\n" + currWord);
+                builder.setPositiveButton("Play Again", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        GameInit.this.playGame();
+                    }
+                });
+                builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        GameInit.this.finish();
+                    }
+                });
+                builder.show();
+            }
+        } else if (currPart < sizePart) {
+            part[currPart].setVisibility(View.VISIBLE);
+            currPart++;
+        } else {
+            disabledButton();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("You lose !!");
+            builder.setMessage("Wrong!! \n\n the answer was \n\n" + currWord);
+            builder.setPositiveButton("Play Again", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    GameInit.this.playGame();
+                }
+            });
+            builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    GameInit.this.finish();
+                }
+            });
+            builder.show();
+        }
+    }
 
-        for(int i = 0; i < unrepeatWord.length(); i++) {
-            downLine[i] = new TextView(this);
-            downLine[i].setText(unrepeatWord.charAt(i));
-            downLine[i].setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            downLine[i].setGravity(Gravity.CENTER);
-            downLine[i].setTextColor(Color.BLACK);
-            downLine[i].setBackgroundColor(Color.BLACK);
-            wordC.addView(downLine[i]);
+    public void disabledButton () {
+        for (int i = 0 ; i < gridView.getChildCount(); i++) {
+            gridView.getChildAt(i).setEnabled(false);
         }
     }
 }
